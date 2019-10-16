@@ -4,7 +4,7 @@
 # Original (and heavily changed) code from: https://gist.github.com/kadamski/92653913a53baf9dd1a8
 # By: Mauri Favaron
 from __future__ import print_function
-import serial, struct, sys, time, json, subprocess
+import serial, struct, sys, time
 
 DEBUG = 0
 CMD_MODE = 2
@@ -103,6 +103,23 @@ def cmd_set_id(id):
 
 
 if __name__ == "__main__":
+	
+	# Get input parameters
+	if len(sys.argv) != 3:
+		print("duster.py - Procedure for collecting PM-2.5 and PM-10 from the low-cost SDS001 dust sensor")
+		print()
+		print("Usage:")
+		print()
+		print("  sudo ./duster.py <num_hours> <out_path>")
+		print()
+		print("Copyright 2019 by Servizi Territorio srl")
+		print("                  All rights reserved")
+		print()
+		print("Written by: Mauri Favaron")
+		print()
+		sys.exit(1)
+	num_hours = int(os.argv[1])
+	out_path  = os.argv[2]
 	
 	# SDS011 activation sequence
 	cmd_set_sleep(0)
