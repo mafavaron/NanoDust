@@ -4,7 +4,7 @@
 # Original (and heavily changed) code from: https://gist.github.com/kadamski/92653913a53baf9dd1a8
 # By: Mauri Favaron
 from __future__ import print_function
-import sys, time
+import os, sys, time
 from sds011 import *
 
 DATA_FILE = "../data/test.csv"
@@ -26,8 +26,8 @@ if __name__ == "__main__":
 		print("Written by: Mauri Favaron")
 		print()
 		sys.exit(1)
-	num_hours = int(os.argv[1])
-	out_path  = os.argv[2]
+	num_hours = int(sys.argv[1])
+	out_path  = sys.argv[2]
 	
 	# Check serial port is connected (it *must* be /dev/ttyUSB0)
 	if not os.isdir("/dev/ttyUSB0"):
