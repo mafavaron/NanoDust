@@ -30,7 +30,7 @@ if __name__ == "__main__":
 	out_path  = sys.argv[2]
 	
 	# Check serial port is connected (it *must* be /dev/ttyUSB0)
-	if not os.isdir("/dev/ttyUSB0"):
+	if not os.path.exists("/dev/ttyUSB0"):
 		print("duster.py:: error: Serial port '/dev/ttyUSB0' not found; check connections")
 		sys.exit(2)
 	
