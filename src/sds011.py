@@ -6,7 +6,7 @@ class SDS011:
 
 	# Class attributes
 	CMD_MODE = 2
-	CMD_QUERY_DATA = 4
+	CMD_QUERY_self.data = 4
 	CMD_DEVICE_ID = 5
 	CMD_SLEEP = 6
 	CMD_FIRMWARE = 7
@@ -24,7 +24,7 @@ class SDS011:
 		self.ser.open()
 		self.ser.flushInput()
 		
-		# Initialize internal data
+		# Initialize internal self.data
 		self.byte = 0
 		self.data = ""
 
@@ -56,46 +56,46 @@ class SDS011:
 		checksum = sum(ord(v) for v in d[2:8])%256
 		print("Y: {}, M: {}, D: {}, ID: {}, CRC={}".format(r[0], r[1], r[2], hex(r[3]), "OK" if (checksum==r[4] and r[5]==0xab) else "NOK"))
 
-	def read_response():
+	def read_response(self):
 		byte = 0
 		while byte != "\xaa":
-			byte = ser.read(size=1)
+			byte = self.ser.read(size=1)
 
-		d = ser.read(size=9)
+		d = self.ser.read(size=9)
 
 		if DEBUG:
 			dump(d, '< ')
 		return byte + d
 
-	def cmd_set_mode(mode=MODE_QUERY):
-		ser.write(construct_command(CMD_MODE, [0x1, mode]))
+	def cmd_set_mode(self, mode=MODE_QUERY):
+		self.ser.write(construct_command(CMD_MODE, [0x1, mode]))
 		read_response()
 
-	def cmd_query_data():
-		ser.write(construct_command(CMD_QUERY_DATA))
+	def cmd_query_data(self):
+		self.ser.write(construct_command(CMD_QUERY_DATA))
 		d = read_response()
 		values = []
 		if d[1] == "\xc0":
 			values = process_data(d)
 		return values
 
-	def cmd_set_sleep(sleep):
+	def cmd_set_sleep(self, sleep):
 		mode = 0 if sleep else 1
-		ser.write(construct_command(CMD_SLEEP, [0x1, mode]))
+		self.ser.write(construct_command(CMD_SLEEP, [0x1, mode]))
 		read_response()
 
-	def cmd_set_working_period(period):
-		ser.write(construct_command(CMD_WORKING_PERIOD, [0x1, period]))
+	def cmd_set_working_period(self, period):
+		self.ser.write(construct_command(CMD_WORKING_PERIOD, [0x1, period]))
 		read_response()
 
-	def cmd_firmware_ver():
-		ser.write(construct_command(CMD_FIRMWARE))
+	def cmd_firmware_ver(self):
+		self.ser.write(construct_command(CMD_FIRMWARE))
 		d = read_response()
 		process_version(d)
 
-	def cmd_set_id(id):
+	def cmd_set_id(self, id):
 		id_h = (id>>8) % 256
 		id_l = id % 256
-		ser.write(construct_command(CMD_DEVICE_ID, [0]*10+[id_l, id_h]))
+		self.ser.write(construct_command(CMD_DEVICE_ID, [0]*10+[id_l, id_h]))
 		read_response()
 
