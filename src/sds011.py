@@ -1,19 +1,20 @@
 #!/usr/bin/python
+# coding=utf-8
 
 import serial, struct, sys, time
 
 class SDS011:
 
 	# Class attributes
-	CMD_MODE = 2
-	CMD_QUERY_self.data = 4
-	CMD_DEVICE_ID = 5
-	CMD_SLEEP = 6
-	CMD_FIRMWARE = 7
+	CMD_MODE           = 2
+	CMD_QUERY_DATA     = 4
+	CMD_DEVICE_ID      = 5
+	CMD_SLEEP          = 6
+	CMD_FIRMWARE       = 7
 	CMD_WORKING_PERIOD = 8
-	MODE_ACTIVE = 0
-	MODE_QUERY = 1
-	PERIOD_CONTINUOUS = 0
+	MODE_ACTIVE        = 0
+	MODE_QUERY         = 1
+	PERIOD_CONTINUOUS  = 0
 
 	def __init__(self):
 		
