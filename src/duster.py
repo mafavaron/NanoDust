@@ -124,7 +124,7 @@ if __name__ == "__main__":
 			time.sleep(2)
 
 		# Store value
-		f.write("%s, %f, %f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), values[0]/10.0, values[1]/10.0))
+		f.write("%s, %f, %f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), values[0], values[1]))
 		print(iIter)
 
 	# Save file and leave
