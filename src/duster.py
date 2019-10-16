@@ -16,7 +16,7 @@ CMD_WORKING_PERIOD = 8
 MODE_ACTIVE = 0
 MODE_QUERY = 1
 PERIOD_CONTINUOUS = 0
-DATA_FILE = "./data/test.csv"
+DATA_FILE = "../data/test.csv"
 
 MQTT_HOST = ''
 MQTT_TOPIC = '/weather/particulatematter'
@@ -104,8 +104,9 @@ def cmd_set_id(id):
 
 if __name__ == "__main__":
 	
-	# Initialize
+	# SDS011 activation sequence
 	cmd_set_sleep(0)
+	time.sleep(10)	# Allow measurements to settle
 	cmd_firmware_ver()
 	cmd_set_working_period(PERIOD_CONTINUOUS)
 	cmd_set_mode(MODE_QUERY)
