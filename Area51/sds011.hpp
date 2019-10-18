@@ -29,6 +29,8 @@ class sds011 {
 		short int setStreamingPeriod(unsigned short int* dt);	// 0:OK, -1:Error
 		short int getStreamingPeriod(unsigned short int* dt);	// 0:OK, -1:Error
 		short int getFirmwareDate(unsigned int* date);			// 0:OK, -1:Error
+		unsigned short int getCompletionCode(void);
+		string getCompletionMessage(void);
 };
 
 #endif /* __SDS011__ */
