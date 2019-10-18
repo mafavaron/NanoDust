@@ -10,8 +10,8 @@
 class sds011 {
 	private:
 		unsigned short int	id;
-		char				cvCommand[OUT_CHAR];
-		char				cvResponse[IN_CHAR];
+		unsigned char		cvCommand[OUT_CHAR];
+		unsigned char		cvResponse[IN_CHAR];
 		unsigned short int	iRetCode;
 		string				sRetMsg;
 	public:
@@ -31,6 +31,8 @@ class sds011 {
 		short int getFirmwareDate(unsigned int* date);			// 0:OK, -1:Error
 		unsigned short int getCompletionCode(void);
 		string getCompletionMessage(void);
+	private:
+		unsigned char computeChecksum(void);
 };
 
 #endif /* __SDS011__ */
