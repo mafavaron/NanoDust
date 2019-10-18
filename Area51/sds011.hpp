@@ -1,7 +1,11 @@
-#include "serprt.hpp"
+#ifndef __SDS011__
+#define __SDS011__
 
-#define OUT_CHAR 20
-#define IN_CHAR  11
+#include "serprt.hpp"
+#include <string>
+
+#define OUT_CHAR 19
+#define IN_CHAR  10
 
 class sds011 {
 	private:
@@ -21,3 +25,5 @@ class sds011 {
 		short int setOutScan(void);							// 0:OK, -1:Error
 		short int getScanState(void);						// 1:In scan, 0:Out scan, -1:Error
 };
+
+#endif /* __SDS011__ */
