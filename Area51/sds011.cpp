@@ -97,6 +97,17 @@ short int sds011::setStreamMode(void) {
     this->cvCommand[17] = this->computeChecksum();
     this->cvCommand[18] = 0xAB;
 
+    // Send data
+    if(!writeport(this->iPort)) {
+        close(this->iPort);
+        this->sRetMsg  = "Set stream command not sent"
+        this->iRetCode = 4;
+        return(-1);
+    }
+
+    // Leave
+    return(0);
+
 };
 
 
@@ -149,6 +160,6 @@ unsigned char sds011::computeChecksum(void) {
     for(int i=2; i<=16; i++) sum += this->cvCommand[i];
     sum &= 0x0FF;
     return(sum);
-    
+
 };
 
