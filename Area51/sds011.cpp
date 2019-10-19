@@ -4,13 +4,13 @@
 #include "sds011.hpp"
 
 
-sds011::sds011(void) {
+sds011::sds011(const std::string sSerialPort) {
 
     // Basic initialization
     this->id          = 0;
     this->iRetCode    = 1;
     this->sRetMsg     = "Uninitialized";
-    this->sSerialPort = "/dev/ttyUSB0";
+    this->sSerialPort = sSerialPort;
 
     // Assign command fixed parts
     this->cvCommand[ 0] = 0xAA;
