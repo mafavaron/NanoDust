@@ -16,7 +16,7 @@ private:
     std::string			sSerialPort;
     std::string			sRetMsg;
 public:
-    sds011(void);
+    sds011(const std::string sSerialPort);
     ~sds011(void);
     short int setStreamMode(void);							// 0:OK, -1:Error
     short int setPollingMode(void);							// 0:OK, -1:Error
