@@ -32,15 +32,29 @@ sds011::sds011(const std::string sSerialPort) {
     if(!isatty(this->iPort)) {
         this->iRetCode = 2;
         this->sRetMsg  = "The serial port exist, but is not a 'terminal'";
+        return;
     }
 
     // Configure port
-    speed_t baudRate;
+    speed_t baudRate = B9600;
     struct termios termAttr;
     tcgetattr(this->iPort, &termAttr);
     termAttr.c_cflag |= CREAD | CLOCAL | CS8;   // Enable receiver and local mode, and force 8 data bits
     termAttr.c_cflag |= IGNPAR;                 // Ignore framing and parity errors
     termAttr.c_lflag &= ~(ICANON);              // Disable canonical mode
+    termAttr.c_lflag &= ~(ECHO);                // Disable terminal echo
+    termAttr.c_lflag &= ~(ECHOE);               // Disable terminal echo
+    termAttr.c_lflag &= ~(ISIG);                // Disable (kill-and-more) signal detection
+    termAttr.c_cc[VMIN]  =  0;                  // Disable inter-character delay detection: use timeout instead
+    termAttr.c_cc[VTIME] = 50;                  // Timeout = 50 tenths of a second = 5s
+    cfsetispeed(&termAttr, baudRate);
+    cfsetospeed(&termAttr, baudRate);
+    int retCode = tcsetattr(this->iPort, TCSANOW, &termAttr);
+    if (retCode != 0) {
+        this->sRetMsg  = "Attempt to write port configuration failed";
+        this->iRetCode = 3;
+        return;
+    }
 
     fcntl(this->iPort, F_SETFL, 0);
 
