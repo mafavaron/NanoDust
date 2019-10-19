@@ -5,10 +5,17 @@
 
 
 sds011::sds011(void) {
+
+    // Basic initialization
     this->id          = 0;
     this->iRetCode    = 1;
     this->sRetMsg     = "Uninitialized";
     this->sSerialPort = "/dev/ttyUSB0";
+
+    // Assign command fixed parts
+    this->cvCommand[ 0] = 0xAA;
+    this->cvCommand[18] = 0xAB;
+
 };
 
 
