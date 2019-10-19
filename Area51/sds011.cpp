@@ -35,6 +35,9 @@ sds011::sds011(const std::string sSerialPort) {
         return;
     }
 
+    // Assign default id (broadcast)
+    this -> id = 0xFFFF;
+
     // Configure port
     speed_t baudRate = B9600;
     struct termios termAttr;
@@ -63,10 +66,6 @@ sds011::sds011(const std::string sSerialPort) {
 
     fcntl(this->iPort, F_SETFL, 0);
 
-    // Assign command fixed parts
-    this->cvCommand[ 0] = 0xAA;
-    this->cvCommand[18] = 0xAB;
-
 };
 
 
@@ -75,7 +74,30 @@ sds011::~sds011(void) {
 };
 
 
-short int sds011::setStreamMode(void);							// 0:OK, -1:Error
+short int sds011::setStreamMode(void) {
+
+    // Fill command
+    this->cvCommand[ 0] = 0xAA;
+    this->cvCommand[ 1] = 0xB4;
+    this->cvCommand[ 2] = 0x02;
+    this->cvCommand[ 3] = 0x01;
+    this->cvCommand[ 4] = 0x00;
+    this->cvCommand[ 5] = 0x00;
+    this->cvCommand[ 6] = 0x00;
+    this->cvCommand[ 7] = 0x00;
+    this->cvCommand[ 8] = 0x00;
+    this->cvCommand[ 9] = 0x00;
+    this->cvCommand[10] = 0x00;
+    this->cvCommand[11] = 0x00;
+    this->cvCommand[12] = 0x00;
+    this->cvCommand[13] = 0x00;
+    this->cvCommand[14] = 0x00;
+    this->cvCommand[15] = (this->id & 0xFF00) >> 8;
+    this->cvCommand[16] = (this->id & 0x00FF);
+    this->cvCommand[17] = this->computeChecksum();
+    this->cvCommand[18] = 0xAB;
+
+};
 
 
 short int sds011::setPollingMode(void);							// 0:OK, -1:Error
@@ -121,5 +143,12 @@ string sds011::getCompletionMessage(void) {
 };
 
 
-unsigned char sds011::computeChecksum(void);
+unsigned char sds011::computeChecksum(void) {
+
+    unsigned short int sum = 0x0000;
+    for(int i=2; i<=16; i++) sum += this->cvCommand[i];
+    sum &= 0x0FF;
+    return(sum);
+    
+};
 
