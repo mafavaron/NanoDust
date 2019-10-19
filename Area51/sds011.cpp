@@ -22,15 +22,27 @@ sds011::sds011(const std::string sSerialPort) {
     this->sSerialPort = sSerialPort;
 
     // Check port exists and try opening it
-    this->iPort = open(this->sSerialPort.c_str(), O_RDWR); // | O_NOCTTY); // | O_NDELAY);
+    this->iPort = open(this->sSerialPort.c_str(), O_RDWR|O_NOCTTY);
     if (this->iPort == -1) {
-        this->sRetMsg  = "Unable to open serial port";
         this->iRetCode = 1;
+        this->sRetMsg  = "Unable to open serial port";
         return;
-    } else {
-        fcntl(fd, F_SETFL, 0);
-        //fcntl(fd, F_SETFL, FNDELAY);
     }
+    errno = 0;
+    if(!isatty(this->iPort)) {
+        this->iRetCode = 2;
+        this->sRetMsg  = "The serial port exist, but is not a 'terminal'";
+    }
+
+    // Configure port
+    speed_t baudRate;
+    struct termios termAttr;
+    tcgetattr(this->iPort, &termAttr);
+    termAttr.c_cflag |= CREAD | CLOCAL | CS8;   // Enable receiver and local mode, and force 8 data bits
+    termAttr.c_cflag |= IGNPAR;                 // Ignore framing and parity errors
+    termAttr.c_lflag &= ~(ICANON);              // Disable canonical mode
+
+    fcntl(this->iPort, F_SETFL, 0);
 
     // Assign command fixed parts
     this->cvCommand[ 0] = 0xAA;
