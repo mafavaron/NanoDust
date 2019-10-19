@@ -13,8 +13,8 @@ private:
     unsigned char		cvCommand[OUT_CHAR];
     unsigned char		cvResponse[IN_CHAR];
     unsigned short int	iRetCode;
-    string				sSerialPort;
-    string				sRetMsg;
+    std::string			sSerialPort;
+    std::string			sRetMsg;
 public:
     sds011(void);
     ~sds011(void);
@@ -31,7 +31,7 @@ public:
     short int getStreamingPeriod(unsigned short int* dt);	// 0:OK, -1:Error
     short int getFirmwareDate(unsigned int* date);			// 0:OK, -1:Error
     unsigned short int getCompletionCode(void);
-    string getCompletionMessage(void);
+    std::string getCompletionMessage(void);
 private:
     unsigned char computeChecksum(void);
 };
