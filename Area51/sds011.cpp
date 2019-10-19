@@ -1,16 +1,36 @@
 //
 // Created by patrizia on 10/19/19.
 //
+#include <unistd.h>  /* UNIX standard function definitions */
+#include <fcntl.h>   /* File control definitions */
+#include <errno.h>   /* Error number definitions */
+#include <termios.h> /* POSIX terminal control definitions */
 #include "sds011.hpp"
+
+#define RS232_MINCHAR 0
+#define RS232_TIMEOUT 50
 
 
 sds011::sds011(const std::string sSerialPort) {
 
+    // Assume success (will falsify on failure)
+    this->iRetCode    = 0;
+
     // Basic initialization
     this->id          = 0;
-    this->iRetCode    = 1;
     this->sRetMsg     = "Uninitialized";
     this->sSerialPort = sSerialPort;
+
+    // Check port exists and try opening it
+    this->iPort = open(this->sSerialPort.c_str(), O_RDWR); // | O_NOCTTY); // | O_NDELAY);
+    if (this->iPort == -1) {
+        this->sRetMsg  = "Unable to open serial port";
+        this->iRetCode = 1;
+        return;
+    } else {
+        fcntl(fd, F_SETFL, 0);
+        //fcntl(fd, F_SETFL, FNDELAY);
+    }
 
     // Assign command fixed parts
     this->cvCommand[ 0] = 0xAA;
