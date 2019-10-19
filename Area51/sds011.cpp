@@ -97,7 +97,46 @@ short int sds011::setStreamMode(void) {
     this->cvCommand[17] = this->computeChecksum();
     this->cvCommand[18] = 0xAB;
 
-    // Send data
+    // Send command
+    if(!writeport(this->iPort)) {
+        close(this->iPort);
+        this->sRetMsg  = "Set stream command not sent"
+        this->iRetCode = 4;
+        return(-1);
+    }
+
+    // Get answer
+
+    // Leave
+    return(0);
+
+};
+
+
+short int sds011::setPollingMode(void) {
+
+    // Fill command
+    this->cvCommand[ 0] = 0xAA;
+    this->cvCommand[ 1] = 0xB4;
+    this->cvCommand[ 2] = 0x02;
+    this->cvCommand[ 3] = 0x01;
+    this->cvCommand[ 4] = 0x01;
+    this->cvCommand[ 5] = 0x00;
+    this->cvCommand[ 6] = 0x00;
+    this->cvCommand[ 7] = 0x00;
+    this->cvCommand[ 8] = 0x00;
+    this->cvCommand[ 9] = 0x00;
+    this->cvCommand[10] = 0x00;
+    this->cvCommand[11] = 0x00;
+    this->cvCommand[12] = 0x00;
+    this->cvCommand[13] = 0x00;
+    this->cvCommand[14] = 0x00;
+    this->cvCommand[15] = (this->id & 0xFF00) >> 8;
+    this->cvCommand[16] = (this->id & 0x00FF);
+    this->cvCommand[17] = this->computeChecksum();
+    this->cvCommand[18] = 0xAB;
+
+    // Send command
     if(!writeport(this->iPort)) {
         close(this->iPort);
         this->sRetMsg  = "Set stream command not sent"
@@ -111,7 +150,7 @@ short int sds011::setStreamMode(void) {
 };
 
 
-short int sds011::setPollingMode(void) {
+short int sds011::getReportingMode(void) {
 
     // Fill command
     this->cvCommand[ 0] = 0xAA;
@@ -134,7 +173,7 @@ short int sds011::setPollingMode(void) {
     this->cvCommand[17] = this->computeChecksum();
     this->cvCommand[18] = 0xAB;
 
-    // Send data
+    // Send command
     if(!writeport(this->iPort)) {
         close(this->iPort);
         this->sRetMsg  = "Set stream command not sent"
@@ -146,9 +185,6 @@ short int sds011::setPollingMode(void) {
     return(0);
 
 };
-
-
-short int sds011::getReportingMode(void);						// 1:Polling, 0:Stream, -1:Error
 
 
 short int sds011::getData(float* pm_2_5, float* pm_10);			// 0:OK, -1:Error
