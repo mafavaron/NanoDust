@@ -39,14 +39,16 @@ sds011::sds011(const std::string sSerialPort) {
     speed_t baudRate = B9600;
     struct termios termAttr;
     tcgetattr(this->iPort, &termAttr);
-    termAttr.c_cflag |= CREAD | CLOCAL | CS8;   // Enable receiver and local mode, and force 8 data bits
-    termAttr.c_cflag |= IGNPAR;                 // Ignore framing and parity errors
-    termAttr.c_lflag &= ~(ICANON);              // Disable canonical mode
-    termAttr.c_lflag &= ~(ECHO);                // Disable terminal echo
-    termAttr.c_lflag &= ~(ECHOE);               // Disable terminal echo
-    termAttr.c_lflag &= ~(ISIG);                // Disable (kill-and-more) signal detection
-    termAttr.c_cc[VMIN]  =  0;                  // Disable inter-character delay detection: use timeout instead
-    termAttr.c_cc[VTIME] = 50;                  // Timeout = 50 tenths of a second = 5s
+    termAttr.c_cflag |= CREAD | CLOCAL | CS8;    // Enable receiver and local mode, and force 8 data bits
+    termAttr.c_cflag |= IGNPAR;                  // Ignore framing and parity errors
+    termAttr.c_lflag &= ~(ICANON);               // Disable canonical mode
+    termAttr.c_cflag &= ~(CRTSCTS);              // Disable hardware flow control
+    termAttr.c_iflag &= ~(IXON | IXOFF | IXANY); // Disable software flow control
+    termAttr.c_lflag &= ~(ECHO);                 // Disable terminal echo
+    termAttr.c_lflag &= ~(ECHOE);                // Disable terminal echo
+    termAttr.c_lflag &= ~(ISIG);                 // Disable (kill-and-more) signal detection
+    termAttr.c_cc[VMIN]  =  0;                   // Disable inter-character delay detection: use timeout instead
+    termAttr.c_cc[VTIME] = 50;                   // Timeout = 50 tenths of a second = 5s
     cfsetispeed(&termAttr, baudRate);
     cfsetospeed(&termAttr, baudRate);
     int retCode = tcsetattr(this->iPort, TCSANOW, &termAttr);
