@@ -40,8 +40,8 @@ if __name__ == "__main__":
 	sds.cmd_set_sleep(0)
 	time.sleep(10)	# Allow measurements to settle
 	sds.cmd_firmware_ver()
-	sds.cmd_set_working_period(PERIOD_CONTINUOUS)
-	sds.cmd_set_mode(MODE_QUERY)
+	sds.cmd_set_working_period(sds.PERIOD_CONTINUOUS)
+	sds.cmd_set_mode(sds.MODE_QUERY)
     
 	# Get the samples desired
 	f = open(out_file, "w")
