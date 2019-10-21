@@ -5,7 +5,6 @@
 # By: Mauri Favaron
 from __future__ import print_function
 import os, sys, time
-import calendar
 import sds011
 
 
@@ -47,8 +46,8 @@ if __name__ == "__main__":
 	f = open(out_file, "w")
 	f.write("Time.Stamp, PM_2.5, PM_10\n")
 	sds.cmd_set_sleep(0)
-	start_time = calendar.timegm(time.time())
-	while calendar.timegm(time.time()) < 3600.0*num_hours:
+	start_time = round(time.time())
+	while round(time.time()) < 3600.0*num_hours:
 		
 		# Get value
 		values = sds.cmd_query_data();
