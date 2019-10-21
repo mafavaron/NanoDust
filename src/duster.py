@@ -47,7 +47,7 @@ if __name__ == "__main__":
 	f.write("Time.Stamp, PM_2.5, PM_10\n")
 	sds.cmd_set_sleep(0)
 	start_time = round(time.time())
-	while round(time.time()) < 3600.0*num_hours:
+	while round(time.time()) - start_time < 3600.0*num_hours:
 		
 		# Get value
 		values = sds.cmd_query_data();
