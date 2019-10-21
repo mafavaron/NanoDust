@@ -5,9 +5,8 @@
 # By: Mauri Favaron
 from __future__ import print_function
 import os, sys, time
+import calendar
 from sds011 import *
-
-DATA_FILE = "../data/test.csv"
 
 
 if __name__ == "__main__":
@@ -18,7 +17,7 @@ if __name__ == "__main__":
 		print()
 		print("Usage:")
 		print()
-		print("  sudo ./duster.py <num_hours> <out_path>")
+		print("  sudo ./duster.py <num_hours> <out_file>")
 		print()
 		print("Copyright 2019 by Servizi Territorio srl")
 		print("                  All rights reserved")
@@ -27,7 +26,7 @@ if __name__ == "__main__":
 		print()
 		sys.exit(1)
 	num_hours = int(sys.argv[1])
-	out_path  = sys.argv[2]
+	out_file  = sys.argv[2]
 	
 	# Check serial port is connected (it *must* be /dev/ttyUSB0)
 	if not os.path.exists("/dev/ttyUSB0"):
@@ -41,12 +40,13 @@ if __name__ == "__main__":
 	cmd_set_working_period(PERIOD_CONTINUOUS)
 	cmd_set_mode(MODE_QUERY)
     
-	# Get some samples
-	f = open(DATA_FILE, "w")
+	# Get the samples desired
+	f = open(out_file, "w")
 	f.write("Time.Stamp, PM_2.5, PM_10\n")
 	iNumIter = 250
 	cmd_set_sleep(0)
-	for iIter in range(iNumIter):
+	start_time = calendar.timegm(time.now())
+	while calendar.timegm(time.now()) < 3600.0*num_hours:
 		
 		# Get value
 		values = cmd_query_data();
