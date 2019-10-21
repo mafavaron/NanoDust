@@ -40,8 +40,6 @@ class SDS011:
 		ret += ''.join(chr(x) for x in data)
 		ret += "\xff\xff" + chr(checksum) + "\xab"
 
-		if DEBUG:
-			dump(ret, '> ')
 		return ret
 
 	def process_data(self, d):
@@ -64,8 +62,6 @@ class SDS011:
 
 		d = self.ser.read(size=9)
 
-		if DEBUG:
-			dump(d, '< ')
 		return byte + d
 
 	def cmd_set_mode(self, mode=MODE_QUERY):
