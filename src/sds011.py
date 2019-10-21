@@ -66,14 +66,14 @@ class SDS011:
 
 	def cmd_set_mode(self, mode):
 		self.ser.write(self.construct_command(self.CMD_MODE, [0x1, mode]))
-		read_response()
+		self.read_response()
 
 	def cmd_query_data(self):
 		self.ser.write(self.construct_command(self.CMD_QUERY_DATA))
-		d = read_response()
+		d = self.read_response()
 		values = []
 		if d[1] == "\xc0":
-			values = process_data(d)
+			values = self.process_data(d)
 		return values
 
 	def cmd_set_sleep(self, sleep):
