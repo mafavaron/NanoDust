@@ -57,7 +57,6 @@ if __name__ == "__main__":
 
 		# Store value
 		f.write("%s, %f, %f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), values[0], values[1]))
-		print(iIter)
 
 	# Save file and leave
 	f.close()
