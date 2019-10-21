@@ -64,12 +64,12 @@ class SDS011:
 
 		return byte + d
 
-	def cmd_set_mode(self, mode=MODE_QUERY):
-		self.ser.write(construct_command(CMD_MODE, [0x1, mode]))
+	def cmd_set_mode(self, mode=self.MODE_QUERY):
+		self.ser.write(construct_command(self.CMD_MODE, [0x1, mode]))
 		read_response()
 
 	def cmd_query_data(self):
-		self.ser.write(construct_command(CMD_QUERY_DATA))
+		self.ser.write(construct_command(self.CMD_QUERY_DATA))
 		d = read_response()
 		values = []
 		if d[1] == "\xc0":
@@ -82,17 +82,17 @@ class SDS011:
 		self.read_response()
 
 	def cmd_set_working_period(self, period):
-		self.ser.write(self.construct_command(CMD_WORKING_PERIOD, [0x1, period]))
+		self.ser.write(self.construct_command(self.CMD_WORKING_PERIOD, [0x1, period]))
 		self.read_response()
 
 	def cmd_firmware_ver(self):
-		self.ser.write(self.construct_command(CMD_FIRMWARE))
+		self.ser.write(self.construct_command(self.CMD_FIRMWARE))
 		d = self.read_response()
 		self.process_version(d)
 
 	def cmd_set_id(self, id):
 		id_h = (id>>8) % 256
 		id_l = id % 256
-		self.ser.write(self.construct_command(CMD_DEVICE_ID, [0]*10+[id_l, id_h]))
+		self.ser.write(self.construct_command(self.CMD_DEVICE_ID, [0]*10+[id_l, id_h]))
 		self.read_response()
 
