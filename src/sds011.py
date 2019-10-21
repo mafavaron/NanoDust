@@ -64,12 +64,12 @@ class SDS011:
 
 		return byte + d
 
-	def cmd_set_mode(self, mode=self.MODE_QUERY):
-		self.ser.write(construct_command(self.CMD_MODE, [0x1, mode]))
+	def cmd_set_mode(self, mode):
+		self.ser.write(self.construct_command(self.CMD_MODE, [0x1, mode]))
 		read_response()
 
 	def cmd_query_data(self):
-		self.ser.write(construct_command(self.CMD_QUERY_DATA))
+		self.ser.write(self.construct_command(self.CMD_QUERY_DATA))
 		d = read_response()
 		values = []
 		if d[1] == "\xc0":
