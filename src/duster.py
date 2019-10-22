@@ -6,6 +6,7 @@
 from __future__ import print_function
 import os, sys, time
 import sds011
+import database
 
 
 if __name__ == "__main__":
@@ -41,13 +42,13 @@ if __name__ == "__main__":
 	sds.cmd_set_working_period(sds.PERIOD_CONTINUOUS)
 	sds.cmd_set_mode(sds.MODE_QUERY)
 	
-	# Build initial file name
-	out_file = os.path.join(out_path, "Dust_%s.csv" % time.strftime("%Y%m%d.%H"))
-	old_file = out_file
+	# Initialize data base
+	db = database.database(out_path)
+	if db.ret_code != 0:
+		print("Error: Database not opened - " + db.msg)
+		sys.exit(3)
     
 	# Get the samples desired
-	f = open(out_file, "w")
-	f.write("Time.Stamp, PM_2.5, PM_10\n")
 	sds.cmd_set_sleep(0)
 	while True:
 		
@@ -55,10 +56,6 @@ if __name__ == "__main__":
 			
 			# Change file name, if needed
 			out_file = os.path.join(out_path, "Dust_%s.csv" % time.strftime("%Y%m%d.%H"))
-			if out_file != old_file:
-				f.close()
-				f = open(out_file, "w")
-				f.write("Time.Stamp, PM_2.5, PM_10\n")
 			
 			# Get value
 			values = sds.cmd_query_data();
@@ -67,14 +64,14 @@ if __name__ == "__main__":
 				time.sleep(2)
 
 			# Store value
-			f.write("%s, %6.2f, %6.2f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), values[0], values[1]))
-			f.flush()
+			success = db.log_data(values[0], values[1])
+			if not success:
+				print("Warning: Data not written to database - " + db.msg)
 			
 		except e as KeyboardInterrupt:
 			
 			break
 
-	# Save file and leave
-	f.close()
+	# Leave
 	sds.cmd_set_sleep(1)
 
