@@ -43,7 +43,7 @@ class database:
 		# the lightweight 'sqlite3')
 		now = time.gmtime()
 		try:
-			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)", (now.strftime("%Y-%m-%s %H:%M:%S"), pm_2_5, pm_10))
+			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)", (time.strftime("%Y-%m-%s %H:%M:%S", now), pm_2_5, pm_10))
 			self.db.commit()
 		except Exception as e:
 			self.ret_code = 3
@@ -65,5 +65,6 @@ if __name__ == "__main__":
 		if not success:
 			print("Write failed on test 1 - " + db.msg)
 			sys.exit(2)
+		time.sleep(1)
 		
 	print("Sun chì!")
