@@ -7,6 +7,7 @@
 import os
 import sys
 import time
+import calendar
 import sqlite3
 
 
@@ -29,7 +30,7 @@ class database:
 			return
 		self.cr = self.db.cursor()
 		try:
-			self.cr.execute("CREATE TABLE Dust (date text constraint Dust_pk primary key, pm_2_5 float, pm_10 float)")
+			self.cr.execute("CREATE TABLE Dust (date integer constraint Dust_pk primary key, pm_2_5 float, pm_10 float)")
 		except Exception as e:
 			self.ret_code = 0
 			self.msg      = "Data table not created in database - " + str(e)
@@ -43,7 +44,7 @@ class database:
 		# the lightweight 'sqlite3')
 		now = time.gmtime()
 		try:
-			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)", (time.strftime("%Y-%m-%d %H:%M:%S", now), pm_2_5, pm_10))
+			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)", (calendar.timegm(now), pm_2_5, pm_10))
 			self.db.commit()
 		except Exception as e:
 			self.ret_code = 3
