@@ -44,7 +44,7 @@ if __name__ == "__main__":
     
 	# Get the samples desired
 	f = open(out_file, "w")
-	f.write("Time.Stamp, PM_2.5, PM_10\n")
+	f.write("Time.Stamp, Delta.Time, PM_2.5, PM_10\n")
 	sds.cmd_set_sleep(0)
 	start_time = round(time.time())
 	while round(time.time()) - start_time < 3600.0*num_hours:
@@ -56,7 +56,8 @@ if __name__ == "__main__":
 			time.sleep(2)
 
 		# Store value
-		f.write("%s, %f, %f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), values[0], values[1]))
+		delta_time = int(round(time.time()) - start_time)
+		f.write("%s, %d, %6.2f, %6.2f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), delta_time, values[0], values[1]))
 
 	# Save file and leave
 	f.close()
