@@ -16,7 +16,7 @@ if __name__ == "__main__":
 		print()
 		print("Usage:")
 		print()
-		print("  sudo ./duster.py <num_hours> <out_file>")
+		print("  sudo ./duster.py <num_hours> <out_path>")
 		print()
 		print("Copyright 2019 by Servizi Territorio srl")
 		print("                  All rights reserved")
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 		print()
 		sys.exit(1)
 	num_hours = int(sys.argv[1])
-	out_file  = sys.argv[2]
+	out_path  = sys.argv[2]
 	
 	# Check serial port is connected (it *must* be /dev/ttyUSB0)
 	if not os.path.exists("/dev/ttyUSB0"):
@@ -41,23 +41,40 @@ if __name__ == "__main__":
 	sds.cmd_firmware_ver()
 	sds.cmd_set_working_period(sds.PERIOD_CONTINUOUS)
 	sds.cmd_set_mode(sds.MODE_QUERY)
+	
+	# Build initial file name
+	out_file = os.path.join(out_path, "Dust_%s.csv" % time.strftime("%Y%m%d.%H"))
+	old_file = out_file
     
 	# Get the samples desired
 	f = open(out_file, "w")
 	f.write("Time.Stamp, Delta.Time, PM_2.5, PM_10\n")
 	sds.cmd_set_sleep(0)
-	start_time = round(time.time())
-	while round(time.time()) - start_time < 3600.0*num_hours:
+	while True:
 		
-		# Get value
-		values = sds.cmd_query_data();
-		if values is not None and len(values) == 2:
-			print("PM2.5: ", values[0], ", PM10: ", values[1])
-			time.sleep(2)
+		try:
+			
+			# Change file name, if needed
+			out_file = os.path.join(out_path, "Dust_%s.csv" % time.strftime("%Y%m%d.%H"))
+			if out_file != old_file:
+				f.close()
+				f = open(out_file, "w")
+				f.write("Time.Stamp, Delta.Time, PM_2.5, PM_10\n")
+			
+			# Get value
+			values = sds.cmd_query_data();
+			if values is not None and len(values) == 2:
+				print("PM2.5: ", values[0], ", PM10: ", values[1])
+				time.sleep(2)
 
-		# Store value
-		delta_time = int(round(time.time()) - start_time)
-		f.write("%s, %d, %6.2f, %6.2f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), delta_time, values[0], values[1]))
+			# Store value
+			delta_time = int(round(time.time()) - start_time)
+			f.write("%s, %d, %6.2f, %6.2f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), delta_time, values[0], values[1]))
+			f.flush()
+			
+		except e as KeyboardInterrupt:
+			
+			break
 
 	# Save file and leave
 	f.close()
