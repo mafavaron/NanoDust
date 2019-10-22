@@ -68,7 +68,7 @@ if __name__ == "__main__":
 			if not success:
 				print("Warning: Data not written to database - " + db.msg)
 			
-		except e as KeyboardInterrupt:
+		except KeyboardInterrupt as e:
 			
 			break
 
