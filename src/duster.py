@@ -48,7 +48,7 @@ if __name__ == "__main__":
     
 	# Get the samples desired
 	f = open(out_file, "w")
-	f.write("Time.Stamp, Delta.Time, PM_2.5, PM_10\n")
+	f.write("Time.Stamp, PM_2.5, PM_10\n")
 	sds.cmd_set_sleep(0)
 	while True:
 		
@@ -59,17 +59,16 @@ if __name__ == "__main__":
 			if out_file != old_file:
 				f.close()
 				f = open(out_file, "w")
-				f.write("Time.Stamp, Delta.Time, PM_2.5, PM_10\n")
+				f.write("Time.Stamp, PM_2.5, PM_10\n")
 			
 			# Get value
 			values = sds.cmd_query_data();
 			if values is not None and len(values) == 2:
-				print("PM2.5: ", values[0], ", PM10: ", values[1])
+				print(out_file, "  PM2.5: ", values[0], ", PM10: ", values[1])
 				time.sleep(2)
 
 			# Store value
-			delta_time = int(round(time.time()) - start_time)
-			f.write("%s, %d, %6.2f, %6.2f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), delta_time, values[0], values[1]))
+			f.write("%s, %6.2f, %6.2f\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), values[0], values[1]))
 			f.flush()
 			
 		except e as KeyboardInterrupt:
