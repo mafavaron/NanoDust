@@ -11,12 +11,12 @@ import sds011
 if __name__ == "__main__":
 	
 	# Get input parameters
-	if len(sys.argv) != 3:
+	if len(sys.argv) != 2:
 		print("duster.py - Procedure for collecting PM-2.5 and PM-10 from the low-cost SDS001 dust sensor")
 		print()
 		print("Usage:")
 		print()
-		print("  sudo ./duster.py <num_hours> <out_path>")
+		print("  sudo ./duster.py <out_path>")
 		print()
 		print("Copyright 2019 by Servizi Territorio srl")
 		print("                  All rights reserved")
@@ -24,8 +24,7 @@ if __name__ == "__main__":
 		print("Written by: Mauri Favaron")
 		print()
 		sys.exit(1)
-	num_hours = int(sys.argv[1])
-	out_path  = sys.argv[2]
+	out_path  = sys.argv[1]
 	
 	# Check serial port is connected (it *must* be /dev/ttyUSB0)
 	if not os.path.exists("/dev/ttyUSB0"):
