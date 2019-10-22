@@ -6,6 +6,7 @@
 
 import os
 import sys
+import time
 import sqlite3
 
 
@@ -28,10 +29,10 @@ class database:
 			return
 		self.cr = self.db.cursor()
 		try:
-			self.cr.execute("CREATE TABLE Dust (date text, pm_2_5 float, pm_10 float)")
+			self.cr.execute("CREATE TABLE Dust (date text constraint Dust_pk primary key, pm_2_5 float, pm_10 float)")
 		except Exception as e:
 			self.ret_code = 0
-			self.msg      = "Data table not created in database"
+			self.msg      = "Data table not created in database - " + str(e)
 			return
 		self.db.commit()
 		
@@ -40,12 +41,13 @@ class database:
 		
 		# Attempt writing and committing data (inefficient maybe, yet safe, and not too cumbersome with
 		# the lightweight 'sqlite3')
+		now = time.gmtime()
 		try:
-			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)")
+			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)", (now.strftime("%Y-%m-%s %H:%M:%S"), pm_2_5, pm_10))
 			self.db.commit()
 		except Exception as e:
 			self.ret_code = 3
-			self.msg      = "Data value not written to table"
+			self.msg      = "Data value not written to table - " + str(e)
 			return False
 		return True
 		
