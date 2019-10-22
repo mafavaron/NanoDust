@@ -30,7 +30,7 @@ class database:
 		try:
 			self.cr.execute("CREATE TABLE Dust (date text, pm_2_5 float, pm_10 float)")
 		except Exception as e:
-			self.ret_code = 2
+			self.ret_code = 0
 			self.msg      = "Data table not created in database"
 			return
 		self.db.commit()
@@ -55,7 +55,13 @@ if __name__ == "__main__":
 	# Test 1: Create database
 	db = database("data")
 	if db.ret_code != 0:
-		print("Error: Database not created")
+		print("Error: Database not created - " + db.msg)
 		sys.exit(1)
+	for i in range(10):
+		fi = float(i)
+		success = db.log_data(fi, -fi)
+		if not success:
+			print("Write failed on test 1 - " + db.msg)
+			sys.exit(2)
 		
 	print("Sun chì!")
