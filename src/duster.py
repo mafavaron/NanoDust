@@ -55,12 +55,12 @@ if __name__ == "__main__":
 		try:
 			
 			# Change file name, if needed
-			out_file = os.path.join(out_path, "Dust_%s.csv" % time.strftime("%Y%m%d.%H"))
+			time_stamp_for_show = time.strftime("%Y-%m-%d %H:%M:%S")
 			
 			# Get value
 			values = sds.cmd_query_data();
 			if values is not None and len(values) == 2:
-				print(out_file, "  PM2.5: ", values[0], ", PM10: ", values[1])
+				print(time_stamp_for_show, "  PM2.5: ", values[0], ", PM10: ", values[1])
 				time.sleep(2)
 
 			# Store value
