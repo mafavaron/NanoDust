@@ -35,6 +35,20 @@ class database:
 			return
 		self.db.commit()
 		
+	
+	def log_data(self, pm_2_5, pm_10):
+		
+		# Attempt writing and committing data (inefficient maybe, yet safe, and not too cumbersome with
+		# the lightweight 'sqlite3')
+		try:
+			self.cr.execute("INSERT INTO Dust (date, pm_2_5, pm_10) VALUES (?, ?, ?)")
+			self.db.commit()
+		except Exception as e:
+			self.ret_code = 3
+			self.msg      = "Data value not written to table"
+			return False
+		return True
+		
 
 if __name__ == "__main__":
 	
